@@ -1,0 +1,40 @@
+{
+  // EMMET
+  "emmet.syntaxProfiles": {
+    "javascript": "jsx"
+  },
+  // INTERFACE
+  "explorer.compactFolders": false,
+  "extensions.ignoreRecommendations": true,
+  "terminal.integrated.fontSize": 14,
+  "terminal.integrated.fontFamily": "monospace",
+  // GIT
+  "git.enableSmartCommit": true,
+  "git.openRepositoryInParentFolders": "always",
+  // LANGUAGES/FRAMEWORKS
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "javascript.suggest.autoImports": true,
+  "typescript.updateImportsOnFileMove.enabled": "never",
+  "typescript.suggest.autoImports": true,
+  "typescript.tsserver.log": "off",
+  "[typescript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  // EDITOR
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.addMissingImports": "explicit",
+    "source.organizeImports": "explicit",
+    "source.organizeImports.biome": "explicit"
+  },
+  "editor.suggestSelection": "first",
+  "editor.rulers": [120],
+  // FILES
+  "files.associations": {
+    ".sequelizerc": "javascript",
+    ".stylelintrc": "json",
+    "*.tsx": "typescriptreact",
+    ".env.*": "dotenv"
+  },
+}
