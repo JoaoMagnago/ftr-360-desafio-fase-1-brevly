@@ -6,6 +6,7 @@ import {
   validatorCompiler,
 } from 'fastify-type-provider-zod'
 import { createShortLinkRoute } from './routes/create-short-link'
+import { incrementAccessCountRoute } from './routes/increment-access-count'
 
 const server = fastify()
 
@@ -28,6 +29,7 @@ server.setErrorHandler((error, _, reply) => {
 server.register(fastifyCors, { origin: '*' })
 
 server.register(createShortLinkRoute)
+server.register(incrementAccessCountRoute)
 
 server.listen({ port: 3333, host: '0.0.0.0' }).then(() => {
   console.log('HTTP Server running!')
