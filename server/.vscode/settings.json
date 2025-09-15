@@ -29,6 +29,7 @@
   },
   "editor.suggestSelection": "first",
   "editor.rulers": [120],
+  "editor.tabSize": 2,
   // FILES
   "files.associations": {
     ".sequelizerc": "javascript",
