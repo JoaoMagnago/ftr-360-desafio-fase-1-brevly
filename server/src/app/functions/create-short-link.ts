@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { db } from '@/infra/db'
 import { schema } from '@/infra/db/schemas'
 import { type Either, makeLeft, makeRight } from '@/infra/shared/either'
+import { checkShortUrlFormat } from '../utils/string'
 import { InvalidShortUrlFormat } from './errors/invalid-short-url-format'
 import { ShortLinkAlreadyExists } from './errors/short-link-already-exists'
 
@@ -22,7 +23,7 @@ export async function createShortLink(
 ): Promise<Either<ShortLinkAlreadyExists, CreateShortLinkOutput>> {
   const { originalUrl, shortUrl } = getShortLinkInput.parse(input)
 
-  if (!/^[a-z0-9]+$/.test(shortUrl)) {
+  if (!checkShortUrlFormat(shortUrl)) {
     return makeLeft(new InvalidShortUrlFormat(shortUrl))
   }
 
