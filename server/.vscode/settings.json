@@ -25,7 +25,8 @@
   "editor.codeActionsOnSave": {
     // "source.fixAll.eslint": "explicit",
     "source.addMissingImports": "explicit",
-    "source.organizeImports.biome": "explicit"
+    "source.organizeImports.biome": "explicit",
+    "source.removeUnusedImports": "explicit"
   },
   "editor.suggestSelection": "first",
   "editor.rulers": [120],
