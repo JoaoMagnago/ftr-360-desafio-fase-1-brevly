@@ -1,5 +1,5 @@
 import { eq } from 'drizzle-orm'
-import { beforeAll, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import { db } from '@/infra/db'
 import { schema } from '@/infra/db/schemas'
 import { isLeft, isRight, unwrapEither } from '@/infra/shared/either'
@@ -8,8 +8,8 @@ import { InvalidShortUrlFormat } from './errors/invalid-short-url-format'
 import { ShortLinkAlreadyExists } from './errors/short-link-already-exists'
 
 describe('create short link', () => {
-  beforeAll(() => {
-    return db.delete(schema.shortLinks)
+  beforeEach(async () => {
+    await db.delete(schema.shortLinks)
   })
 
   it('should be able to create a short link and get its id', async () => {
