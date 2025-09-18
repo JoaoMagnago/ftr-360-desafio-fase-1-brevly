@@ -14,7 +14,7 @@ describe('create short link', () => {
 
   it('should be able to create a short link and get its id', async () => {
     const shortUrl = 'Example-Page1'
-    const originalUrl = `https://example.com/${shortUrl}`
+    const originalUrl = `https://example.com/`
 
     const result = await createShortLink({ originalUrl, shortUrl })
 
@@ -33,10 +33,11 @@ describe('create short link', () => {
     const shortUrl = 'Example-Page1'
     const originalUrl = `https://example.com`
 
-    const result = await createShortLink({ originalUrl, shortUrl })
+    await createShortLink({ originalUrl, shortUrl })
+    const sut = await createShortLink({ originalUrl, shortUrl })
 
-    expect(isLeft(result)).toBe(true)
-    expect(unwrapEither(result)).toBeInstanceOf(ShortLinkAlreadyExists)
+    expect(isLeft(sut)).toBe(true)
+    expect(unwrapEither(sut)).toBeInstanceOf(ShortLinkAlreadyExists)
   })
 
   it('should not be able to create a short link with incorrect format', async () => {
