@@ -16,6 +16,7 @@ type CreateShortLinkInput = z.input<typeof getShortLinkInput>
 
 type CreateShortLinkOutput = {
   shortLinkId: string
+  shortUrl: string
 }
 
 export async function createShortLink(
@@ -44,7 +45,8 @@ export async function createShortLink(
     })
     .returning({
       id: schema.shortLinks.id,
+      shortUrl: schema.shortLinks.shortUrl,
     })
 
-  return makeRight({ shortLinkId: shortLink.id })
+  return makeRight({ shortLinkId: shortLink.id, shortUrl: shortLink.shortUrl })
 }

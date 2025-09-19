@@ -4,6 +4,7 @@ import { db } from '@/infra/db'
 import { schema } from '@/infra/db/schemas'
 import { isRight, unwrapEither } from '@/infra/shared/either'
 import { createShortLink } from './create-short-link'
+import { ShortLinkNotFoundError } from './errors/short-link-not-found'
 import { getShortLink } from './get-short-link'
 
 describe('get short link', () => {
@@ -17,8 +18,11 @@ describe('get short link', () => {
 
     const createShortLinkSut = await createShortLink({ originalUrl, shortUrl })
     const shortLinkId = createShortLinkSut.right?.shortLinkId
+    const selectedShortUrl = createShortLinkSut.right?.shortUrl
 
-    const getShortLinkSut = await getShortLink({ searchQuery: shortLinkId })
+    const getShortLinkSut = await getShortLink({
+      searchQuery: selectedShortUrl,
+    })
 
     expect(isRight(getShortLinkSut)).toBe(true)
     if (isRight(getShortLinkSut)) {
@@ -32,6 +36,19 @@ describe('get short link', () => {
         })
       )
       expect(shortLink.createdAt).toBeInstanceOf(Date)
+    }
+  })
+
+  it('should throw correct error if short link is not found', async () => {
+    const getShortLinkSut = await getShortLink({
+      searchQuery: 'non-existing-id',
+    })
+
+    expect(isRight(getShortLinkSut)).toBe(false)
+    if (!isRight(getShortLinkSut)) {
+      expect(unwrapEither(getShortLinkSut)).toBeInstanceOf(
+        ShortLinkNotFoundError
+      )
     }
   })
 })

@@ -23,12 +23,16 @@ describe('create short link', () => {
 
     if (isRight(result)) {
       const [shortLink] = await db
-        .select({ id: schema.shortLinks.id })
+        .select({
+          id: schema.shortLinks.id,
+          shortUrl: schema.shortLinks.shortUrl,
+        })
         .from(schema.shortLinks)
         .where(eq(schema.shortLinks.id, result.right.shortLinkId))
 
       expect(shortLink).toBeDefined()
       expect(shortLink.id).toBe(result.right.shortLinkId)
+      expect(shortLink.shortUrl).toBe(result.right.shortUrl)
     }
   })
 

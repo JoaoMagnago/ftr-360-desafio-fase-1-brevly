@@ -36,7 +36,9 @@ export async function getShortLink(
     })
     .from(schema.shortLinks)
     .where(
-      searchQuery ? ilike(schema.shortLinks.id, `%${searchQuery}%`) : undefined
+      searchQuery
+        ? ilike(schema.shortLinks.shortUrl, `%${searchQuery}%`)
+        : undefined
     )
 
   const shortLink = results[0]
