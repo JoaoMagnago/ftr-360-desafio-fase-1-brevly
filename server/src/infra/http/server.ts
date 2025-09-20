@@ -6,6 +6,7 @@ import {
   validatorCompiler,
 } from 'fastify-type-provider-zod'
 import { createShortLinkRoute } from './routes/create-short-link'
+import { deleteShortLinkRoute } from './routes/delete-short-link'
 import { getShortLinksRoute } from './routes/get-short-links'
 import { incrementAccessCountRoute } from './routes/increment-access-count'
 
@@ -30,6 +31,7 @@ server.setErrorHandler((error, _, reply) => {
 server.register(fastifyCors, { origin: '*' })
 
 server.register(createShortLinkRoute)
+server.register(deleteShortLinkRoute)
 server.register(getShortLinksRoute)
 server.register(incrementAccessCountRoute)
 
