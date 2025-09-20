@@ -6,12 +6,12 @@ import { isRight, unwrapEither } from '@/infra/shared/either'
 import { createShortLink } from './create-short-link'
 import { getAllShortLinks } from './get-all-short-links'
 
-describe('get short link', () => {
+describe('get all short links', () => {
   beforeEach(async () => {
     await db.delete(schema.shortLinks)
   })
 
-  it('should be able to get all short link from database', async () => {
+  it('should be able to get all short links from database', async () => {
     const shortUrls = [
       `Example-Page${uuidv7().slice(0, 6).toLowerCase()}`,
       `Example-Page1${uuidv7().slice(0, 6).toLowerCase()}`,
