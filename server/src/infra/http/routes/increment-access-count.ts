@@ -1,13 +1,8 @@
-import { eq } from 'drizzle-orm'
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
-import { getShortLink } from '@/app/functions/get-short-link'
-import { db } from '@/infra/db'
-import { schema } from '@/infra/db/schemas'
-
-const incrementAccessCountInput = z.object({
-  searchQuery: z.string(),
-})
+import { getShortLinkById } from '@/app/functions/get-short-link-by-id'
+import { incrementAccessCount } from '@/app/functions/increment-access-count'
+import { isLeft } from '@/infra/shared/either'
 
 export const incrementAccessCountRoute: FastifyPluginAsyncZod =
   async server => {
@@ -22,29 +17,32 @@ export const incrementAccessCountRoute: FastifyPluginAsyncZod =
           }),
           response: {
             200: z.object({ updatedAccessCount: z.coerce.number() }),
+            404: z
+              .object({ message: z.string() })
+              .describe('Short link not found'),
           },
         },
       },
       async (request, reply) => {
-        const shortLink = await getShortLink({
-          searchQuery: request.query?.searchQuery,
+        const { searchQuery } = request.query
+        const shortLink = await getShortLinkById({ searchQuery })
+
+        if (isLeft(shortLink)) {
+          return reply.status(404).send({ message: shortLink.left.message })
+        }
+
+        const accessCount = shortLink.right.shortLink.accessCount ?? 0
+
+        const updatedAccessCount = await incrementAccessCount({
+          searchQuery: shortLink.right.shortLink.id,
+          accessCount,
         })
 
-        const accessCount = shortLink.right?.shortLink.accessCount ?? 0
-
-        const { searchQuery } = incrementAccessCountInput.parse(request.query)
-
-        const result = await db
-          .update(schema.shortLinks)
-          .set({
-            accessCount: accessCount + 1,
+        return reply
+          .status(200)
+          .send({
+            updatedAccessCount: updatedAccessCount.right?.updatedAccessCount,
           })
-          .where(eq(schema.shortLinks.id, searchQuery))
-          .returning({ updatedAccessCount: schema.shortLinks.accessCount })
-
-        const updatedAccessCount = result[0]?.updatedAccessCount ?? 0
-
-        return reply.status(200).send({ updatedAccessCount })
       }
     )
   }
