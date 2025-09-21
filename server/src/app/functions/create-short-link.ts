@@ -4,8 +4,8 @@ import { db } from '@/infra/db'
 import { schema } from '@/infra/db/schemas'
 import { type Either, makeLeft, makeRight } from '@/infra/shared/either'
 import { checkShortUrlFormat } from '../utils/string'
-import { InvalidShortUrlFormat } from './errors/invalid-short-url-format'
-import { ShortLinkAlreadyExists } from './errors/short-link-already-exists'
+import { InvalidShortUrlFormatError } from './errors/invalid-short-url-format'
+import { ShortLinkAlreadyExistsError } from './errors/short-link-already-exists'
 
 const getShortLinkInput = z.object({
   originalUrl: z.string(),
@@ -21,11 +21,11 @@ type CreateShortLinkOutput = {
 
 export async function createShortLink(
   input: CreateShortLinkInput
-): Promise<Either<ShortLinkAlreadyExists, CreateShortLinkOutput>> {
+): Promise<Either<ShortLinkAlreadyExistsError, CreateShortLinkOutput>> {
   const { originalUrl, shortUrl } = getShortLinkInput.parse(input)
 
   if (!checkShortUrlFormat(shortUrl)) {
-    return makeLeft(new InvalidShortUrlFormat(shortUrl))
+    return makeLeft(new InvalidShortUrlFormatError(shortUrl))
   }
 
   const [shortUrlAlreadyExists] = await db
@@ -34,7 +34,7 @@ export async function createShortLink(
     .where(eq(schema.shortLinks.shortUrl, shortUrl))
 
   if (shortUrlAlreadyExists) {
-    return makeLeft(new ShortLinkAlreadyExists(shortUrl))
+    return makeLeft(new ShortLinkAlreadyExistsError(shortUrl))
   }
 
   const [shortLink] = await db

@@ -5,8 +5,8 @@ import { db } from '@/infra/db'
 import { schema } from '@/infra/db/schemas'
 import { isLeft, isRight, unwrapEither } from '@/infra/shared/either'
 import { createShortLink } from './create-short-link'
-import { InvalidShortUrlFormat } from './errors/invalid-short-url-format'
-import { ShortLinkAlreadyExists } from './errors/short-link-already-exists'
+import { InvalidShortUrlFormatError } from './errors/invalid-short-url-format'
+import { ShortLinkAlreadyExistsError } from './errors/short-link-already-exists'
 
 describe('create short link', () => {
   beforeEach(async () => {
@@ -44,7 +44,7 @@ describe('create short link', () => {
     const sut = await createShortLink({ originalUrl, shortUrl })
 
     expect(isLeft(sut)).toBe(true)
-    expect(unwrapEither(sut)).toBeInstanceOf(ShortLinkAlreadyExists)
+    expect(unwrapEither(sut)).toBeInstanceOf(ShortLinkAlreadyExistsError)
   })
 
   it('should not be able to create a short link with incorrect format', async () => {
@@ -59,7 +59,7 @@ describe('create short link', () => {
     invalidShortUrls.map(async shortUrl => {
       const res = await createShortLink({ originalUrl, shortUrl })
       expect(isLeft(res)).toBe(true)
-      expect(unwrapEither(res)).toBeInstanceOf(InvalidShortUrlFormat)
+      expect(unwrapEither(res)).toBeInstanceOf(InvalidShortUrlFormatError)
     })
   })
 })

@@ -1,4 +1,5 @@
 import { fastifyCors } from '@fastify/cors'
+import { fastifyMultipart } from '@fastify/multipart'
 import { fastify } from 'fastify'
 import {
   hasZodFastifySchemaValidationErrors,
@@ -7,6 +8,7 @@ import {
 } from 'fastify-type-provider-zod'
 import { createShortLinkRoute } from './routes/create-short-link'
 import { deleteShortLinkRoute } from './routes/delete-short-link'
+import { generateAndDownloadCSVRoute } from './routes/generate-and-download-csv'
 import { getShortLinksRoute } from './routes/get-short-links'
 import { incrementAccessCountRoute } from './routes/increment-access-count'
 
@@ -30,10 +32,13 @@ server.setErrorHandler((error, _, reply) => {
 
 server.register(fastifyCors, { origin: '*' })
 
+server.register(fastifyMultipart)
+
 server.register(createShortLinkRoute)
 server.register(deleteShortLinkRoute)
 server.register(getShortLinksRoute)
 server.register(incrementAccessCountRoute)
+server.register(generateAndDownloadCSVRoute)
 
 server.listen({ port: 3333, host: '0.0.0.0' }).then(() => {
   console.log('HTTP Server running!')
