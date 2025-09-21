@@ -11,6 +11,7 @@ import { deleteShortLinkRoute } from './routes/delete-short-link'
 import { generateAndDownloadCSVRoute } from './routes/generate-and-download-csv'
 import { getShortLinksRoute } from './routes/get-short-links'
 import { incrementAccessCountRoute } from './routes/increment-access-count'
+import { shortLinksCsvRoute } from './routes/temporary-route-csv-test'
 
 const server = fastify()
 
@@ -39,6 +40,7 @@ server.register(deleteShortLinkRoute)
 server.register(getShortLinksRoute)
 server.register(incrementAccessCountRoute)
 server.register(generateAndDownloadCSVRoute)
+server.register(shortLinksCsvRoute)
 
 server.listen({ port: 3333, host: '0.0.0.0' }).then(() => {
   console.log('HTTP Server running!')
