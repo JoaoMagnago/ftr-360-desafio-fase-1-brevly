@@ -2,7 +2,7 @@ import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
 import { getShortLinkById } from '@/app/functions/get-short-link-by-id'
 import { incrementAccessCount } from '@/app/functions/increment-access-count'
-import { isLeft } from '@/infra/shared/either'
+import { isLeft, isRight, unwrapEither } from '@/infra/shared/either'
 
 export const incrementAccessCountRoute: FastifyPluginAsyncZod =
   async server => {
@@ -27,22 +27,24 @@ export const incrementAccessCountRoute: FastifyPluginAsyncZod =
         const { searchQuery } = request.query
         const shortLink = await getShortLinkById({ searchQuery })
 
-        if (isLeft(shortLink)) {
-          return reply.status(404).send({ message: shortLink.left.message })
-        }
+        if (isRight(shortLink)) {
+          const accessCount = shortLink.right.shortLink.accessCount ?? 0
 
-        const accessCount = shortLink.right.shortLink.accessCount ?? 0
+          const updatedAccessCount = await incrementAccessCount({
+            searchQuery: shortLink.right.shortLink.id,
+            accessCount,
+          })
 
-        const updatedAccessCount = await incrementAccessCount({
-          searchQuery: shortLink.right.shortLink.id,
-          accessCount,
-        })
-
-        return reply
-          .status(200)
-          .send({
+          return reply.status(200).send({
             updatedAccessCount: updatedAccessCount.right?.updatedAccessCount,
           })
+        }
+
+        const error = unwrapEither(shortLink)
+
+        if (isLeft(shortLink) && error.message === 'Short link not found') {
+          return reply.status(404).send({ message: error.message })
+        }
       }
     )
   }

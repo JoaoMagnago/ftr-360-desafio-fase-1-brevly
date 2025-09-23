@@ -21,7 +21,12 @@ type CreateShortLinkOutput = {
 
 export async function createShortLink(
   input: CreateShortLinkInput
-): Promise<Either<ShortLinkAlreadyExistsError, CreateShortLinkOutput>> {
+): Promise<
+  Either<
+    InvalidShortUrlFormatError | ShortLinkAlreadyExistsError,
+    CreateShortLinkOutput
+  >
+> {
   const { originalUrl, shortUrl } = getShortLinkInput.parse(input)
 
   if (!checkShortUrlFormat(shortUrl)) {

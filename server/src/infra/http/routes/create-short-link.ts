@@ -5,6 +5,8 @@ import type {
 } from 'fastify-type-provider-zod'
 import z from 'zod'
 import { createShortLink } from '@/app/functions/create-short-link'
+import { InvalidShortUrlFormatError } from '@/app/functions/errors/invalid-short-url-format'
+import { ShortLinkAlreadyExistsError } from '@/app/functions/errors/short-link-already-exists'
 import { isRight, unwrapEither } from '@/infra/shared/either'
 
 export const createShortLinkRoute: FastifyPluginAsyncZod = async (
@@ -47,11 +49,10 @@ export const createShortLinkRoute: FastifyPluginAsyncZod = async (
 
       const error = unwrapEither(result)
 
-      switch (error.constructor.name) {
-        case 'ShortLinkAlreadyExists':
-          return reply.status(409).send({ message: error.message })
-        case 'InvalidShortUrlFormat':
-          return reply.status(422).send({ message: error.message })
+      if (error instanceof ShortLinkAlreadyExistsError) {
+        return reply.status(409).send({ message: error.message })
+      } else if (error instanceof InvalidShortUrlFormatError) {
+        return reply.status(422).send({ message: error.message })
       }
     }
   )

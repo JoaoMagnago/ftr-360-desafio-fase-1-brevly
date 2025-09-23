@@ -8,7 +8,7 @@ import {
 } from 'fastify-type-provider-zod'
 import { createShortLinkRoute } from './routes/create-short-link'
 import { deleteShortLinkRoute } from './routes/delete-short-link'
-import { exportShortLinksRoute } from './routes/export-short-link'
+import { exportShortLinksRoute } from './routes/export-short-links'
 import { getShortLinksRoute } from './routes/get-short-links'
 import { incrementAccessCountRoute } from './routes/increment-access-count'
 
