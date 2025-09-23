@@ -1,6 +1,6 @@
+import { randomUUID } from 'node:crypto'
 import { eq } from 'drizzle-orm'
-import { uuidv7 } from 'uuidv7'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { db } from '@/infra/db'
 import { schema } from '@/infra/db/schemas'
 import { isLeft, isRight, unwrapEither } from '@/infra/shared/either'
@@ -9,12 +9,8 @@ import { InvalidShortUrlFormatError } from './errors/invalid-short-url-format'
 import { ShortLinkAlreadyExistsError } from './errors/short-link-already-exists'
 
 describe('create short link', () => {
-  beforeEach(async () => {
-    await db.delete(schema.shortLinks)
-  })
-
   it('should be able to create a short link and get its id', async () => {
-    const shortUrl = `Example-Page${uuidv7().slice(0, 6).toLowerCase()}`
+    const shortUrl = `Example-Page${randomUUID().toLocaleLowerCase().replace(/-/g, '')}`
     const originalUrl = `https://example.com`
 
     const result = await createShortLink({ originalUrl, shortUrl })
@@ -37,7 +33,7 @@ describe('create short link', () => {
   })
 
   it('should not be able to create a short link with an existing short url', async () => {
-    const shortUrl = `Example-Page${uuidv7().slice(0, 6).toLowerCase()}`
+    const shortUrl = `Example-Page${randomUUID().toLocaleLowerCase().replace(/-/g, '')}`
     const originalUrl = `https://example.com`
 
     await createShortLink({ originalUrl, shortUrl })

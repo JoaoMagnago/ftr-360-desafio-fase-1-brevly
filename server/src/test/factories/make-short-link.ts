@@ -15,6 +15,7 @@ export async function makeShortLink(
       originalUrl: 'https://example.com/fileName',
       shortUrl: `${fileName}${uuidv7().slice(0, 6).toLowerCase()}`,
       accessCount: 1,
+      createdAt: new Date(),
       ...overrides,
     })
     .returning()

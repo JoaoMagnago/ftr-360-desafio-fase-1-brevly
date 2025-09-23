@@ -1,24 +1,18 @@
-import { uuidv7 } from 'uuidv7'
-import { beforeEach, describe, expect, it } from 'vitest'
-import { db } from '@/infra/db'
-import { schema } from '@/infra/db/schemas'
+import { randomUUID } from 'node:crypto'
+import { describe, expect, it } from 'vitest'
 import { isLeft, isRight, unwrapEither } from '@/infra/shared/either'
-import { createShortLink } from './create-short-link'
+import { makeShortLink } from '@/test/factories/make-short-link'
 import { deleteShortLink } from './delete-short-link'
 import { ShortLinkNotFoundError } from './errors/short-link-not-found'
 
 describe('delete short link', () => {
-  beforeEach(async () => {
-    await db.delete(schema.shortLinks)
-  })
-
   it('should be able to delete a short link from its id', async () => {
-    const shortUrl = `Example-Page${uuidv7().slice(0, 6).toLowerCase()}`
-    const originalUrl = 'https://example.com'
+    const namePattern = randomUUID().toLocaleLowerCase().replace(/-/g, '')
+    const shortLink = await makeShortLink({
+      shortUrl: `Example-Page1${namePattern}`,
+    })
 
-    const createShortLinkSut = await createShortLink({ originalUrl, shortUrl })
-
-    const shortLinkId = createShortLinkSut.right?.shortLinkId as string
+    const shortLinkId = shortLink.id
 
     const deleteShortLinkSut = await deleteShortLink({ shortLinkId })
 

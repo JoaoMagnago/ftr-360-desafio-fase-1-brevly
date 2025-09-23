@@ -1,24 +1,18 @@
-import { uuidv7 } from 'uuidv7'
-import { beforeEach, describe, expect, it } from 'vitest'
-import { db } from '@/infra/db'
-import { schema } from '@/infra/db/schemas'
+import { randomUUID } from 'node:crypto'
+import { describe, expect, it } from 'vitest'
 import { isRight } from '@/infra/shared/either'
-import { createShortLink } from './create-short-link'
+import { makeShortLink } from '@/test/factories/make-short-link'
 import { getShortLinkById } from './get-short-link-by-id'
 import { incrementAccessCount } from './increment-access-count'
 
 describe('increment short link access count', () => {
-  beforeEach(async () => {
-    await db.delete(schema.shortLinks)
-  })
-
   it('should be able to increment the access count of a short link', async () => {
-    const shortUrl = `Example-Page${uuidv7().slice(0, 6).toLowerCase()}`
-    const originalUrl = 'https://example.com'
+    const namePattern = randomUUID().toLocaleLowerCase().replace(/-/g, '')
+    const shortLink = await makeShortLink({
+      shortUrl: `Example-Page1${namePattern}`,
+    })
 
-    const createShortLinkSut = await createShortLink({ originalUrl, shortUrl })
-
-    const shortLinkId = createShortLinkSut.right?.shortLinkId as string
+    const shortLinkId = shortLink.id
     const accessCount = (await getShortLinkById({ searchQuery: shortLinkId }))
       .right?.shortLink.accessCount as number
 

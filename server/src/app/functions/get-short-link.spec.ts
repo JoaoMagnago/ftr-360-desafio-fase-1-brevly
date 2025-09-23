@@ -1,27 +1,21 @@
-import { uuidv7 } from 'uuidv7'
-import { beforeEach, describe, expect, it } from 'vitest'
-import { db } from '@/infra/db'
-import { schema } from '@/infra/db/schemas'
+import { randomUUID } from 'node:crypto'
+import { describe, expect, it } from 'vitest'
 import { isRight, unwrapEither } from '@/infra/shared/either'
-import { createShortLink } from './create-short-link'
+import { makeShortLink } from '@/test/factories/make-short-link'
 import { ShortLinkNotFoundError } from './errors/short-link-not-found'
 import { getShortLink } from './get-short-link'
 
 describe('get short link', () => {
-  beforeEach(async () => {
-    await db.delete(schema.shortLinks)
-  })
-
   it('should be able to get a short link from its id', async () => {
-    const shortUrl = `Example-Page${uuidv7().slice(0, 6).toLowerCase()}`
-    const originalUrl = 'https://example.com'
+    const namePattern = randomUUID().toLocaleLowerCase().replace(/-/g, '')
+    const shortLink = await makeShortLink({
+      shortUrl: `Example-Page1${namePattern}`,
+    })
 
-    const createShortLinkSut = await createShortLink({ originalUrl, shortUrl })
-    const shortLinkId = createShortLinkSut.right?.shortLinkId
-    const selectedShortUrl = createShortLinkSut.right?.shortUrl
+    const { id: shortLinkId, originalUrl, shortUrl } = shortLink
 
     const getShortLinkSut = await getShortLink({
-      searchQuery: selectedShortUrl,
+      searchQuery: shortUrl,
     })
 
     expect(isRight(getShortLinkSut)).toBe(true)
@@ -32,7 +26,7 @@ describe('get short link', () => {
           id: shortLinkId,
           shortUrl,
           originalUrl,
-          accessCount: 0,
+          accessCount: 1,
         })
       )
       expect(shortLink.createdAt).toBeInstanceOf(Date)

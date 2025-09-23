@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto'
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { isRight, unwrapEither } from '@/infra/shared/either'
 // Get entire upload file to storage function as an object
 import * as upload from '@/infra/storage/upload-file-to-storage'
@@ -7,6 +7,10 @@ import { makeShortLink } from '@/test/factories/make-short-link'
 import { exportShortLinks } from './export-short-links'
 
 describe('export short links', () => {
+  beforeEach(async () => {
+    vi.clearAllMocks()
+  })
+
   it('should be able to export short links', async () => {
     const uploadStub = vi
       .spyOn(upload, 'uploadFileToStorage')
@@ -19,19 +23,19 @@ describe('export short links', () => {
 
     const namePattern = randomUUID().toLocaleLowerCase().replace(/-/g, '')
 
-    const upload1 = await makeShortLink({
+    const shortLink1 = await makeShortLink({
       shortUrl: `Example-Page1${namePattern}`,
     })
-    const upload2 = await makeShortLink({
+    const shortLink2 = await makeShortLink({
       shortUrl: `Example-Page2${namePattern}`,
     })
-    const upload3 = await makeShortLink({
+    const shortLink3 = await makeShortLink({
       shortUrl: `Example-Page3${namePattern}`,
     })
-    const upload4 = await makeShortLink({
+    const shortLink4 = await makeShortLink({
       shortUrl: `Example-Page4${namePattern}`,
     })
-    const upload5 = await makeShortLink({
+    const shortLink5 = await makeShortLink({
       shortUrl: `Example-Page5${namePattern}`,
     })
 
@@ -65,40 +69,40 @@ describe('export short links', () => {
       expect(unwrapEither(sut).reportUrl).toBe('http://example.com/file.csv')
     }
     expect(csvAsArray).toEqual([
-      ['ID', 'Short URL', 'Original URL', 'Access Count', 'Created at'],
+      ['ID', 'Original URL', 'Short URL', 'Access Count', 'Created at'],
       [
-        upload1.id,
-        upload1.shortUrl,
-        upload1.originalUrl,
-        expect.any(Number),
+        shortLink1.id,
+        shortLink1.originalUrl,
+        shortLink1.shortUrl,
+        shortLink1.accessCount.toString(),
         expect.any(String),
       ],
       [
-        upload2.id,
-        upload2.shortUrl,
-        upload2.originalUrl,
-        expect.any(Number),
+        shortLink2.id,
+        shortLink2.originalUrl,
+        shortLink2.shortUrl,
+        shortLink2.accessCount.toString(),
         expect.any(String),
       ],
       [
-        upload3.id,
-        upload3.shortUrl,
-        upload3.originalUrl,
-        expect.any(Number),
+        shortLink3.id,
+        shortLink3.originalUrl,
+        shortLink3.shortUrl,
+        shortLink2.accessCount.toString(),
         expect.any(String),
       ],
       [
-        upload4.id,
-        upload4.shortUrl,
-        upload4.originalUrl,
-        expect.any(Number),
+        shortLink4.id,
+        shortLink4.originalUrl,
+        shortLink4.shortUrl,
+        shortLink2.accessCount.toString(),
         expect.any(String),
       ],
       [
-        upload5.id,
-        upload5.shortUrl,
-        upload5.originalUrl,
-        expect.any(Number),
+        shortLink5.id,
+        shortLink5.originalUrl,
+        shortLink5.shortUrl,
+        shortLink2.accessCount.toString(),
         expect.any(String),
       ],
     ])

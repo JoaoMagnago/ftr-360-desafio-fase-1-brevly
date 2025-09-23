@@ -1,25 +1,18 @@
-import { uuidv7 } from 'uuidv7'
-import { beforeEach, describe, expect, it } from 'vitest'
-import { db } from '@/infra/db'
-import { schema } from '@/infra/db/schemas'
+import { randomUUID } from 'node:crypto'
+import { describe, expect, it } from 'vitest'
 import { isRight, unwrapEither } from '@/infra/shared/either'
-import { createShortLink } from './create-short-link'
+import { makeShortLink } from '@/test/factories/make-short-link'
 import { getAllShortLinks } from './get-all-short-links'
 
 describe('get all short links', () => {
-  beforeEach(async () => {
-    await db.delete(schema.shortLinks)
-  })
-
   it('should be able to get all short links from database', async () => {
-    const shortUrls = [
-      `Example-Page${uuidv7().slice(0, 6).toLowerCase()}`,
-      `Example-Page1${uuidv7().slice(0, 6).toLowerCase()}`,
-    ]
-    const originalUrl = 'https://example.com'
+    const namePattern = randomUUID().toLocaleLowerCase().replace(/-/g, '')
 
-    shortUrls.forEach(async shortUrl => {
-      await createShortLink({ originalUrl, shortUrl })
+    await makeShortLink({
+      shortUrl: `Example-Page1${namePattern}`,
+    })
+    await makeShortLink({
+      shortUrl: `Example-Page2${namePattern}`,
     })
 
     const getAllShortLinksSut = await getAllShortLinks()
