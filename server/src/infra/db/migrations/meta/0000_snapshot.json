@@ -20,8 +20,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "short_key": {
-          "name": "short_key",
+        "short_url": {
+          "name": "short_url",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -45,11 +45,11 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "short-links_short_key_unique": {
-          "name": "short-links_short_key_unique",
+        "short-links_short_url_unique": {
+          "name": "short-links_short_url_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "short_key"
+            "short_url"
           ]
         }
       },
