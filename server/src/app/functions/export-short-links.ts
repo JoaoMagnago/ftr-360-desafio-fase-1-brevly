@@ -3,14 +3,16 @@ import { pipeline } from 'node:stream/promises'
 import { stringify } from 'csv-stringify'
 import { db, pg } from '@/infra/db'
 import { schema } from '@/infra/db/schemas'
-import { type Either, makeRight } from '@/infra/shared/either'
+import { type Either, makeLeft, makeRight } from '@/infra/shared/either'
+import { uploadFileToStorage } from '@/infra/storage/upload-file-to-storage'
+import { CouldNotRetrieveUrlError } from './errors/could-not-retrieve-url'
 
 type ExportShortLinksOutput = {
   reportUrl: string
 }
 
 export async function exportShortLinks(): Promise<
-  Either<never, ExportShortLinksOutput>
+  Either<CouldNotRetrieveUrlError, ExportShortLinksOutput>
 > {
   const { sql, params } = db
     .select({
@@ -52,25 +54,21 @@ export async function exportShortLinks(): Promise<
       },
     }),
     csv,
-    new Transform({
-      transform(chunk: Buffer, _encoding, callback) {
-        console.log(chunk.toString())
-        callback()
-      },
-    }),
     uploadToStorageStream
   )
 
-  await convertToCSVPipeline
+  const uploadToStorage = uploadFileToStorage({
+    contentType: 'text/csv',
+    folder: 'downloads',
+    fileName: `${new Date().toISOString()}-short-links.csv`,
+    contentStream: uploadToStorageStream,
+  })
 
-  // const uploadToStorage = uploadFileToStorage({
-  //   contentType: 'text/csv',
-  //   folder: 'downloads',
-  //   fileName: `${new Date().toISOString()}-uploads.csv`,
-  //   contentStream: uploadToStorageStream,
-  // })
+  const [{ url }] = await Promise.all([uploadToStorage, convertToCSVPipeline])
 
-  // const [{ url }] = await Promise.all([uploadToStorage, convertToCSVPipeline])
+  if (!url) {
+    return makeLeft(new CouldNotRetrieveUrlError())
+  }
 
-  return makeRight({ reportUrl: '' })
+  return makeRight({ reportUrl: url })
 }

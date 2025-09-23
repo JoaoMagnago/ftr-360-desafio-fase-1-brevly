@@ -61,7 +61,9 @@ describe('export short links', () => {
       .map(row => row.split(','))
 
     expect(isRight(sut)).toBe(true)
-    expect(unwrapEither(sut).reportUrl).toBe('http://example.com/file.csv')
+    if (isRight(sut)) {
+      expect(unwrapEither(sut).reportUrl).toBe('http://example.com/file.csv')
+    }
     expect(csvAsArray).toEqual([
       ['ID', 'Short URL', 'Original URL', 'Access Count', 'Created at'],
       [
