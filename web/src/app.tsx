@@ -1,3 +1,9 @@
+import { ShortLinkForm } from './components/short-link-form';
+
 export function App() {
-  return <h1 className="text-danger">Brev.ly</h1>;
+  return (
+    <main className="h-dvh flex items-center justify-center p-3 md:flex-col">
+      <ShortLinkForm />
+    </main>
+  );
 }
