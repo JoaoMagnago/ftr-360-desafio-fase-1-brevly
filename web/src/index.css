@@ -3,8 +3,9 @@
 @theme {
   --font-sans: 'Open Sans', sans-serif;
 
+  /* Base primitives */
   --text-xl: 24px;
-  --text-lg: 16px;
+  --text-lg: 18px;
   --text-md: 14px;
   --text-sm: 12px;
   --text-xs: 10px;
@@ -29,4 +30,47 @@
   --color-blue-base: #2c46b1;
   --color-blue-dark: #2c4091;
   --color-danger: #b12c4d;
+
+  /* Compound typography tokens */
+  --custom-text-xl: {
+    font-size: var(--text-xl);
+    line-height: var(--line-height-xl);
+    font-weight: var(--font-bold);
+    text-transform: none;
+  }
+
+  --custom-text-lg: {
+    font-size: var(--text-lg);
+    line-height: var(--line-height-lg);
+    font-weight: var(--font-bold);
+    text-transform: none;
+  }
+
+  --custom-text-md: {
+    font-size: var(--text-md);
+    line-height: var(--line-height-md);
+    font-weight: var(--font-semibold);
+    text-transform: none;
+  }
+
+  --custom-text-sm-regular: {
+    font-size: var(--text-sm);
+    line-height: var(--line-height-sm);
+    font-weight: var(--font-regular);
+    text-transform: none;
+  }
+
+  --custom-text-sm-semibold: {
+    font-size: var(--text-sm);
+    line-height: var(--line-height-sm);
+    font-weight: var(--font-semibold);
+    text-transform: none;
+  }
+
+  --custom-text-xs: {
+    font-size: var(--text-xs);
+    line-height: var(--line-height-xs);
+    font-weight: var(--font-regular);
+    text-transform: uppercase;
+  }
 }
