@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import z from 'zod';
 
@@ -26,13 +25,9 @@ export function ShortLinkForm() {
   const originalUrl = watch('originalUrl');
   const shortUrl = watch('shortUrl');
 
-  useEffect(() => {
-    console.log({ originalUrl, shortUrl });
-  }, [originalUrl, shortUrl]);
-
   return (
-    <div className="flex flex-col p-8 gap-6 bg-gray-100 max-w-[380px] w-full rounded-lg">
-      <h2 className="text-xl/8 font-(weight:--font-bold) text-gray-600">
+    <div className="flex flex-col p-8 gap-6 bg-gray-100 w-full rounded-lg">
+      <h2 className="text-xl/(line-height-xl) font-(weight:--font-bold) text-gray-600">
         Novo link
       </h2>
 
