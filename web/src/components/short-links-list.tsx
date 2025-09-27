@@ -15,22 +15,22 @@ export const ShortLinksList = () => {
   const shortLinks: ShortLink[] = [
     {
       originalUrl: 'www.youtube.com.br',
-      shortUrl: 'brev.ly/Youtube-Subscriptions',
+      shortUrl: 'Youtube-Subscriptions',
       accessCount: 12,
     },
     {
       originalUrl: 'www.google.com.br',
-      shortUrl: 'brev.ly/Google-Search',
+      shortUrl: 'Google-Search',
       accessCount: 6,
     },
     {
       originalUrl: 'www.facebook.com.br',
-      shortUrl: 'brev.ly/Facebook-Page',
+      shortUrl: 'Facebook-Page',
       accessCount: 1,
     },
     {
       originalUrl: 'www.instagram.com.br',
-      shortUrl: 'brev.ly/Instagram-Feed',
+      shortUrl: 'Instagram-Feed',
       accessCount: 37,
     },
   ];
@@ -57,10 +57,10 @@ export const ShortLinksList = () => {
             <div className="flex items-center justify-between py-4 w-full border-t-1 border-t-gray-200">
               <div className="flex flex-col justify-between">
                 <a
-                  href={'#'}
+                  href={`/${shortUrl}`}
                   className="text-md-semibold font-(weight:--font-semibold) text-blue-base hover:cursor-pointer"
                 >
-                  {shortUrl}
+                  brev.ly/{shortUrl}
                 </a>
                 <span className="text-sm-regular text-gray-500">
                   {originalUrl}
