@@ -31,7 +31,7 @@ export function ShortLinkForm() {
         </div>
       </div>
 
-      <button className="h-12 text-md text-white font-(weight:--font-semibold) cursor-pointer bg-blue-base rounded-lg">
+      <button className="h-12 text-md text-white font-(weight:--font-semibold) cursor-pointer bg-blue-base rounded-lg hover:brightness-101 ease-in-out">
         Salvar link
       </button>
     </div>
