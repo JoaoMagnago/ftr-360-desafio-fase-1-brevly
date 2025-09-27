@@ -3,22 +3,37 @@
 @theme {
   --font-sans: 'Open Sans', sans-serif;
 
-  /* Base primitives */
-  --text-xl: 24px;
-  --text-lg: 18px;
-  --text-md: 14px;
-  --text-sm: 12px;
-  --text-xs: 10px;
-
-  --line-height-xl: 32px;
-  --line-height-lg: 24px;
-  --line-height-md: 18px;
-  --line-height-sm: 16px;
-  --line-height-xs: 14px;
-
   --font-bold: 700;
   --font-semibold: 600;
   --font-regular: 400;
+
+  --text-xl: 24px;
+  --text-xl--line-height: 32px;
+  --text-xl--font-weight: 700;
+
+  --text-lg: 18px;
+  --text-lg--line-height: 24px;
+  --text-lg--font-weight: 700;
+
+  --text-md-semibold: 14px;
+  --text-md--line-height: 18px;
+  --text-md--font-weight: 600;
+
+  --text-md-regular: 14px;
+  --text-md--line-height: 18px;
+  --text-md--font-weight: 400;
+
+  --text-sm-semibold: 12px;
+  --text-sm--line-height: 16px;
+  --text-sm--font-weight: 700;
+
+  --text-sm-regular: 12px;
+  --text-sm--line-height: 16px;
+  --text-sm--font-weight: 400;
+
+  --text-xs: 10px;
+  --text-xs--line-height: 14px;
+  --text-xs--font-weight: 400;
 
   --color-white: #ffffff;
   --color-gray-100: #f9f9fb;
@@ -30,47 +45,4 @@
   --color-blue-base: #2c46b1;
   --color-blue-dark: #2c4091;
   --color-danger: #b12c4d;
-
-  /* Compound typography tokens */
-  --custom-text-xl: {
-    font-size: var(--text-xl);
-    line-height: var(--line-height-xl);
-    font-weight: var(--font-bold);
-    text-transform: none;
-  }
-
-  --custom-text-lg: {
-    font-size: var(--text-lg);
-    line-height: var(--line-height-lg);
-    font-weight: var(--font-bold);
-    text-transform: none;
-  }
-
-  --custom-text-md: {
-    font-size: var(--text-md);
-    line-height: var(--line-height-md);
-    font-weight: var(--font-semibold);
-    text-transform: none;
-  }
-
-  --custom-text-sm-regular: {
-    font-size: var(--text-sm);
-    line-height: var(--line-height-sm);
-    font-weight: var(--font-regular);
-    text-transform: none;
-  }
-
-  --custom-text-sm-semibold: {
-    font-size: var(--text-sm);
-    line-height: var(--line-height-sm);
-    font-weight: var(--font-semibold);
-    text-transform: none;
-  }
-
-  --custom-text-xs: {
-    font-size: var(--text-xs);
-    line-height: var(--line-height-xs);
-    font-weight: var(--font-regular);
-    text-transform: uppercase;
-  }
 }
