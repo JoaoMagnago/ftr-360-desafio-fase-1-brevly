@@ -36,13 +36,13 @@ export const ShortLinksList = () => {
   ];
 
   return (
-    <div className="flex items-center flex-col gap-5 p-8 rounded-lg bg-gray-100 w-full lg:max-w-[580px] lg:mt-16">
+    <div className="flex items-center flex-col gap-5 p-8 rounded-lg bg-gray-100 w-full lg:mt-16">
       <div className="flex justify-between w-full">
         <h2 className="text-lg text-gray-600">Meus links</h2>
 
         <button
           disabled={!shortLinks || shortLinks.length === 0}
-          className="flex items-center p-2 rounded-sm cursor-pointer gap-1.5 bg-gray-200 hover:brightness-101 ease-in-out disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-100"
+          className="flex items-center p-2 rounded-sm cursor-pointer gap-1.5 bg-gray-200 border-1 border-transparent hover:border-blue-base disabled:cursor-not-allowed disabled:opacity-50 disabled:border-transparent transition-all duration-100"
         >
           <DownloadSimpleIcon fontSize={16} />
           <span className="text-sm-semibold font-(weight:--font-semibold) text-gray-500">
@@ -56,9 +56,12 @@ export const ShortLinksList = () => {
           shortLinks.map(({ shortUrl, originalUrl, accessCount }) => (
             <div className="flex items-center justify-between py-4 w-full border-t-1 border-t-gray-200">
               <div className="flex flex-col justify-between">
-                <span className="text-md-semibold font-(weight:--font-semibold) text-blue-base">
+                <a
+                  href={'#'}
+                  className="text-md-semibold font-(weight:--font-semibold) text-blue-base hover:cursor-pointer"
+                >
                   {shortUrl}
-                </span>
+                </a>
                 <span className="text-sm-regular text-gray-500">
                   {originalUrl}
                 </span>
@@ -69,10 +72,10 @@ export const ShortLinksList = () => {
                   {`${accessCount} ${accessCount === 1 ? 'acesso' : 'acessos'}`}
                 </span>
                 <div className="flex items-center gap-1">
-                  <button className="flex items-center justify-center p-2 rounded-sm bg-gray-200 hover:cursor-pointer active:scale-95 transition-all duration-100">
+                  <button className="flex items-center justify-center p-2 rounded-sm bg-gray-200 border-1 border-transparent hover:cursor-pointer hover:border-blue-base transition-all duration-100">
                     <CopyIcon />
                   </button>
-                  <button className="flex items-center justify-center p-2 rounded-sm bg-gray-200 hover:cursor-pointer active:scale-95 transition-all duration-100">
+                  <button className="flex items-center justify-center p-2 rounded-sm bg-gray-200 border-1 border-transparent hover:cursor-pointer hover:border-blue-base transition-all duration-100">
                     <TrashIcon />
                   </button>
                 </div>
