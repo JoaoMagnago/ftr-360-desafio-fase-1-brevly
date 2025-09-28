@@ -1,8 +1,7 @@
+import logo from '../assets/Logo.svg';
 import { PageContainer } from '../components/page-container';
 import { ShortLinkForm } from '../components/short-link-form';
 import { ShortLinksList } from '../components/short-links-list';
-
-import logo from '../assets/Logo.svg';
 
 export const Home = () => {
   return (

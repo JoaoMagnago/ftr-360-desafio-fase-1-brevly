@@ -12,28 +12,7 @@ interface ShortLink {
 }
 
 export const ShortLinksList = () => {
-  const shortLinks: ShortLink[] = [
-    {
-      originalUrl: 'www.youtube.com.br',
-      shortUrl: 'Youtube-Subscriptions',
-      accessCount: 12,
-    },
-    {
-      originalUrl: 'www.google.com.br',
-      shortUrl: 'Google-Search',
-      accessCount: 6,
-    },
-    {
-      originalUrl: 'www.facebook.com.br',
-      shortUrl: 'Facebook-Page',
-      accessCount: 1,
-    },
-    {
-      originalUrl: 'www.instagram.com.br',
-      shortUrl: 'Instagram-Feed',
-      accessCount: 37,
-    },
-  ];
+  const shortLinks: ShortLink[] = [];
 
   return (
     <div className="flex items-center flex-col gap-5 p-8 rounded-lg bg-gray-100 w-full lg:mt-16">
@@ -41,6 +20,7 @@ export const ShortLinksList = () => {
         <h2 className="text-lg text-gray-600">Meus links</h2>
 
         <button
+          type='button'
           disabled={!shortLinks || shortLinks.length === 0}
           className="flex items-center p-2 rounded-sm cursor-pointer gap-1.5 bg-gray-200 border-1 border-transparent hover:border-blue-base disabled:cursor-not-allowed disabled:opacity-50 disabled:border-transparent transition-all duration-100"
         >
@@ -54,7 +34,7 @@ export const ShortLinksList = () => {
       <div className="flex flex-col w-full lg:max-h-[70vh] lg:overflow-y-auto">
         {shortLinks.length > 0 ? (
           shortLinks.map(({ shortUrl, originalUrl, accessCount }) => (
-            <div className="flex items-center justify-between py-4 w-full border-t-1 border-t-gray-200">
+            <div key={shortUrl} className="flex items-center justify-between py-4 w-full border-t-1 border-t-gray-200">
               <div className="flex flex-col justify-between">
                 <a
                   href={`/${shortUrl}`}
@@ -72,10 +52,10 @@ export const ShortLinksList = () => {
                   {`${accessCount} ${accessCount === 1 ? 'acesso' : 'acessos'}`}
                 </span>
                 <div className="flex items-center gap-1">
-                  <button className="flex items-center justify-center p-2 rounded-sm bg-gray-200 border-1 border-transparent hover:cursor-pointer hover:border-blue-base transition-all duration-100">
+                  <button type='button' className="flex items-center justify-center p-2 rounded-sm bg-gray-200 border-1 border-transparent hover:cursor-pointer hover:border-blue-base transition-all duration-100">
                     <CopyIcon />
                   </button>
-                  <button className="flex items-center justify-center p-2 rounded-sm bg-gray-200 border-1 border-transparent hover:cursor-pointer hover:border-blue-base transition-all duration-100">
+                  <button type='button' className="flex items-center justify-center p-2 rounded-sm bg-gray-200 border-1 border-transparent hover:cursor-pointer hover:border-blue-base transition-all duration-100">
                     <TrashIcon />
                   </button>
                 </div>

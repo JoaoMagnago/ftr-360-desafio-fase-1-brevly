@@ -1,6 +1,5 @@
-import { PageContainer } from '../components/page-container';
-
 import notFound from '../assets/404.svg';
+import { PageContainer } from '../components/page-container';
 
 export const NotFound = () => {
   return (

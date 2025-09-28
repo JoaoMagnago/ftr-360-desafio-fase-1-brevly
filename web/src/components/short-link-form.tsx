@@ -1,8 +1,10 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import { WarningIcon } from '@phosphor-icons/react';
-import { Controller, useForm } from 'react-hook-form';
-import z from 'zod';
-import { checkShortUrlFormat } from '../utils/string';
+import { zodResolver } from '@hookform/resolvers/zod'
+import { WarningIcon } from '@phosphor-icons/react'
+import { useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import z from 'zod'
+import { createShortLink } from '../http/routes/create-short-link'
+import { checkShortUrlFormat } from '../utils/string'
 
 const createShortLinkSchema = z.object({
   originalUrl: z.url({ error: 'Informe uma url válida.' }).min(1).max(2048),
@@ -13,9 +15,9 @@ const createShortLinkSchema = z.object({
     .refine((val) => checkShortUrlFormat(val), {
       message: 'Informe uma url minúscula e sem espaço/caracter especial.',
     }),
-});
+})
 
-type CreateShortLinkFormValues = z.infer<typeof createShortLinkSchema>;
+type CreateShortLinkFormValues = z.infer<typeof createShortLinkSchema>
 
 export function ShortLinkForm() {
   const {
@@ -29,18 +31,31 @@ export function ShortLinkForm() {
       originalUrl: '',
       shortUrl: '',
     },
-  });
+  })
+  
+  const [isSavingLink, setIsSavingLink] = useState(false)
 
-  const onSubmit = (data: CreateShortLinkFormValues) => {
-    console.log(data);
-  };
+  const onSubmit = async (data: CreateShortLinkFormValues) => {
+    console.log(data)
 
-  const originalUrl = watch('originalUrl');
-  const shortUrl = watch('shortUrl');
+    setIsSavingLink(true)
+
+    try {
+      await createShortLink(data)
+      console.log("Short link created")
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setIsSavingLink(false)
+    }
+  }
+
+  const originalUrl = watch('originalUrl')
+  const shortUrl = watch('shortUrl')
 
   return (
     <form
-      id="create-short-link-form"
+      id={"create-short-link-form"}
       className="flex flex-col p-8 gap-6 bg-gray-100 w-full rounded-lg"
       onSubmit={handleSubmit(onSubmit)}
     >
@@ -134,8 +149,8 @@ export function ShortLinkForm() {
         disabled={originalUrl.length === 0 || shortUrl.length === 0}
         className="h-12 text-md-semibold text-white font-(weight:--font-semibold) cursor-pointer bg-blue-base rounded-lg hover:bg-blue-dark disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 ease-in-out"
       >
-        Salvar link
+        {isSavingLink ? 'Salvando...' : 'Salvar Link'}
       </button>
     </form>
-  );
+  )
 }
