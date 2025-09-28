@@ -9,6 +9,7 @@ import {
 import { createShortLinkRoute } from './routes/create-short-link'
 import { deleteShortLinkRoute } from './routes/delete-short-link'
 import { exportShortLinksRoute } from './routes/export-short-links'
+import { getShortLinkByShortUrlRoute } from './routes/get-short-link-by-short-url'
 import { getShortLinksRoute } from './routes/get-short-links'
 import { incrementAccessCountRoute } from './routes/increment-access-count'
 
@@ -38,8 +39,9 @@ server.register(fastifyCors, {
 server.register(fastifyMultipart)
 
 server.register(createShortLinkRoute)
-server.register(deleteShortLinkRoute)
 server.register(getShortLinksRoute)
+server.register(getShortLinkByShortUrlRoute)
+server.register(deleteShortLinkRoute)
 server.register(incrementAccessCountRoute)
 server.register(exportShortLinksRoute)
 

@@ -16,7 +16,7 @@ export const ShortLinkItem = ({ shortLink }: { shortLink: ShortLink }) => {
       await navigator.clipboard.writeText(`${BASE_URL}${shortUrl}`)
       setTimeout(() => setCopied(false), 500)
     } catch (err) {
-      console.error('Failed to copy!', err)
+      console.error('Failed to copy short url', err)
     }
   }
 

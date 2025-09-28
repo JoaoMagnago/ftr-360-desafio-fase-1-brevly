@@ -1,11 +1,41 @@
-import { useParams } from 'react-router-dom';
-
+import { useQuery } from '@tanstack/react-query';
+import { useEffect, useMemo } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import logoIcon from '../assets/Logo_Icon.svg';
+import { getShortLinkByShortUrl } from '../http/routes/get-short-link-by-short-url';
 
 export const Redirect = () => {
-  const { shortUrl } = useParams<{ shortUrl: string }>();
-  const originalUrl = `www.${shortUrl?.toLowerCase().replace('-', '')}.com`;
-  console.log('Redirectign to:', originalUrl);
+  const { shortUrl } = useParams<{ shortUrl?: string }>()
+  const navigate = useNavigate()
+
+  const enabled = typeof shortUrl === 'string' && shortUrl.length > 0
+
+  const { data, isError } = useQuery({
+    queryKey: ['short-link-by-short-url', shortUrl],
+    queryFn: () => {
+      if (!shortUrl) {
+        console.log('Error fetching original url')
+        return
+      }
+      return getShortLinkByShortUrl({ shortUrl })
+    },
+    enabled,
+    retry: false,
+  })
+
+  const originalUrl = useMemo(() => data?.originalUrl, [data])
+
+  useEffect(() => {
+    if (isError) {
+      navigate('/404')
+    }
+  }, [isError, navigate])
+
+  useEffect(() => {
+    if(originalUrl) {
+      window.location.href = originalUrl
+    }
+  }, [originalUrl])
 
   return (
     <main className="h-dvh flex items-center justify-center px-3">

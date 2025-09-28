@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto'
 import { describe, expect, it } from 'vitest'
-import { isRight } from '@/infra/shared/either'
+import { isRight, unwrapEither } from '@/infra/shared/either'
 import { makeShortLink } from '@/test/factories/make-short-link'
 import { getShortLinkById } from './get-short-link-by-id'
 import { incrementAccessCount } from './increment-access-count'
@@ -22,5 +22,10 @@ describe('increment short link access count', () => {
     })
 
     expect(isRight(incrementAccessCountSut)).toBe(true)
+    if (isRight(incrementAccessCountSut)) {
+      expect(unwrapEither(incrementAccessCountSut).updatedAccessCount).toBe(
+        accessCount + 1
+      )
+    }
   })
 })

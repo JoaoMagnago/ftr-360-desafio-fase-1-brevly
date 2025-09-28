@@ -16,7 +16,9 @@ export const incrementAccessCountRoute: FastifyPluginAsyncZod =
             searchQuery: z.string().optional(),
           }),
           response: {
-            200: z.object({ updatedAccessCount: z.coerce.number() }),
+            200: z.object({
+              updatedAccessCount: z.coerce.number(),
+            }),
             404: z
               .object({ message: z.string() })
               .describe('Short link not found'),

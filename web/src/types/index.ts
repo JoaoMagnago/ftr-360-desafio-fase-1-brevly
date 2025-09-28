@@ -20,6 +20,15 @@ export interface GetShortLinksResponse {
   shortLinks: ShortLink[]
 }
 
+export interface GetShortLinkByShortUrlParams {
+  shortUrl: string
+}
+
+export interface GetShortLinkByShortUrlResponse {
+  id: string
+  originalUrl: string
+}
+
 export interface DeleteShortLinkParams {
   shortLinkId: string
 }
