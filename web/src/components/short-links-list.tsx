@@ -86,9 +86,9 @@ export const ShortLinksList = () => {
           <div className="flex flex-col items-center gap-3 pt-4 pb-6 w-full border-t-1 border-t-gray-200">
             <LinkIcon fontSize={32} />
 
-            <span className="text-xs text-gray-500 uppercase">
+            <p className="text-xs text-gray-500 uppercase">
               Ainda não existem links cadastrados
-            </span>
+            </p>
           </div>
         )}
       </div>
