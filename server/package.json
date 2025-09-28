@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch --env-file .env src/infra/http/server.ts",
+    "dev": "docker compose up -d pg && tsx watch --env-file .env src/infra/http/server.ts",
     "test": "dotenv -e .env.test -- vitest run -- --single-thread",
     "test:watch": "dotenv -e .env.test -- vitest -- --single-thread",
     "db:generate": "drizzle-kit generate",

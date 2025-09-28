@@ -41,5 +41,7 @@ server.register(incrementAccessCountRoute)
 server.register(exportShortLinksRoute)
 
 server.listen({ port: 3333, host: '0.0.0.0' }).then(() => {
-  console.log('HTTP Server running!')
+  console.log('Environment variables validated')
+  console.clear()
+  console.log('[Server] Ready at http://localhost:3333')
 })
