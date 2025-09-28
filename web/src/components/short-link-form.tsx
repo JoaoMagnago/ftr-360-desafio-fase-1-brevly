@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { WarningIcon } from '@phosphor-icons/react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import z from 'zod'
@@ -24,6 +25,7 @@ export function ShortLinkForm() {
     control,
     formState: { errors },
     watch,
+    reset,
     handleSubmit,
   } = useForm<CreateShortLinkFormValues>({
     resolver: zodResolver(createShortLinkSchema),
@@ -32,19 +34,26 @@ export function ShortLinkForm() {
       shortUrl: '',
     },
   })
-  
+
   const [isSavingLink, setIsSavingLink] = useState(false)
+    
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: createShortLink,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["short-links"] });
+    },
+  });
 
   const onSubmit = async (data: CreateShortLinkFormValues) => {
-    console.log(data)
-
     setIsSavingLink(true)
 
     try {
-      await createShortLink(data)
-      console.log("Short link created")
-    } catch (err) {
-      console.error(err)
+      mutation.mutate(data)
+      reset()
+    } catch (error) {
+      console.error(error)
     } finally {
       setIsSavingLink(false)
     }

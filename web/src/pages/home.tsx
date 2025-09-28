@@ -6,13 +6,13 @@ import { ShortLinksList } from '../components/short-links-list';
 export const Home = () => {
   return (
     <PageContainer>
-      <div className="grid grid-cols-[3fr_5fr] items-center justify-center gap-5 flex-col h-dvh w-full mt-[15%] lg:max-w-[60%] lg:flex-row lg:items-start">
+      <div className="grid grid-cols-1 auto-rows-min items-center gap-5 w-full mt-[15%] lg:max-w-[60%] lg:grid-cols-[3fr_5fr] lg:items-start lg:justify-center lg:mt-0">
         <div className="flex flex-col items-start gap-8 w-full">
           <img src={logo} aria-label={'logo do brev.ly'} className="h-8" />
           <ShortLinkForm />
         </div>
 
-        <ShortLinksList />
+          <ShortLinksList />
       </div>
     </PageContainer>
   );

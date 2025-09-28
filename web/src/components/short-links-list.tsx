@@ -4,15 +4,24 @@ import {
   LinkIcon,
   TrashIcon,
 } from '@phosphor-icons/react';
-
-interface ShortLink {
-  originalUrl: string;
-  shortUrl: string;
-  accessCount: number;
-}
+import { useQuery } from '@tanstack/react-query';
+import { useEffect, useMemo } from 'react';
+import { getShortLinks } from '../http/routes/get-short-links';
 
 export const ShortLinksList = () => {
-  const shortLinks: ShortLink[] = [];
+  const { data: shortLinksData, error, isError, isLoading } = useQuery({
+    queryKey: ["short-links"],
+    queryFn: getShortLinks,
+  });
+
+  const shortLinks = useMemo(() => shortLinksData?.shortLinks ?? [], [shortLinksData]);
+
+  useEffect(() => {
+    console.log(error)
+  }, [error])
+
+  if(isLoading) return <div>loading...</div>
+  if(isError) return <div>{error.message}</div>
 
   return (
     <div className="flex items-center flex-col gap-5 p-8 rounded-lg bg-gray-100 w-full lg:mt-16">
@@ -31,8 +40,8 @@ export const ShortLinksList = () => {
         </button>
       </div>
 
-      <div className="flex flex-col w-full lg:max-h-[70vh] lg:overflow-y-auto">
-        {shortLinks.length > 0 ? (
+      <div className="flex flex-col w-full max-h-[400px] overflow-y-auto">
+        {!!shortLinks && shortLinks.length > 0 ? (
           shortLinks.map(({ shortUrl, originalUrl, accessCount }) => (
             <div key={shortUrl} className="flex items-center justify-between py-4 w-full border-t-1 border-t-gray-200">
               <div className="flex flex-col justify-between">

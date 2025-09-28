@@ -13,10 +13,9 @@ export const httpClient = axios.create({
 httpClient.interceptors.response.use(
   response => response,
   error => {
-    const message =
-      error.response?.data?.message ||
-      error.message ||
-      'Unknown API error occurred'
-    return Promise.reject(new Error(message))
+    const normalizedError = new Error(
+      error.response?.data?.message || error.message || 'Unknown API error'
+    )
+    return Promise.reject(normalizedError)
   }
 )
