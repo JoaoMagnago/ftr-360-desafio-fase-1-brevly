@@ -8,12 +8,23 @@ export interface CreateShortLinkResponse {
   shortUrl: string
 }
 
+export interface ShortLink {
+  id: string
+  originalUrl: string
+  shortUrl: string
+  accessCount: number
+  createdAt: Date
+}
+
 export interface GetShortLinksResponse {
-  shortLinks: {
-    id: string
-    originalUrl: string
-    shortUrl: string
-    accessCount: number
-    createdAt: Date
-  }[]
+  shortLinks: ShortLink[]
+}
+
+export interface DeleteShortLinkParams {
+  shortLinkId: string
+}
+
+export interface DeleteShortLinkResponse {
+  shortLinkId: string
+  shortUrl: string
 }

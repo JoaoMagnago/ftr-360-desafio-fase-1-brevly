@@ -1,12 +1,11 @@
 import {
-  CopyIcon,
   DownloadSimpleIcon,
-  LinkIcon,
-  TrashIcon,
+  LinkIcon
 } from '@phosphor-icons/react';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
 import { getShortLinks } from '../http/routes/get-short-links';
+import { ShortLinkItem } from './short-links-item';
 
 export const ShortLinksList = () => {
   const { data: shortLinksData, error, isError, isLoading } = useQuery({
@@ -42,34 +41,8 @@ export const ShortLinksList = () => {
 
       <div className="flex flex-col w-full max-h-[400px] overflow-y-auto">
         {!!shortLinks && shortLinks.length > 0 ? (
-          shortLinks.map(({ shortUrl, originalUrl, accessCount }) => (
-            <div key={shortUrl} className="flex items-center justify-between py-4 w-full border-t-1 border-t-gray-200">
-              <div className="flex flex-col justify-between">
-                <a
-                  href={`/${shortUrl}`}
-                  className="text-md-semibold font-(weight:--font-semibold) text-blue-base hover:cursor-pointer"
-                >
-                  brev.ly/{shortUrl}
-                </a>
-                <span className="text-sm-regular text-gray-500">
-                  {originalUrl}
-                </span>
-              </div>
-
-              <div className="flex items-center gap-5">
-                <span className="text-sm-regular text-gray-500">
-                  {`${accessCount} ${accessCount === 1 ? 'acesso' : 'acessos'}`}
-                </span>
-                <div className="flex items-center gap-1">
-                  <button type='button' className="flex items-center justify-center p-2 rounded-sm bg-gray-200 border-1 border-transparent hover:cursor-pointer hover:border-blue-base transition-all duration-100">
-                    <CopyIcon />
-                  </button>
-                  <button type='button' className="flex items-center justify-center p-2 rounded-sm bg-gray-200 border-1 border-transparent hover:cursor-pointer hover:border-blue-base transition-all duration-100">
-                    <TrashIcon />
-                  </button>
-                </div>
-              </div>
-            </div>
+          shortLinks.map((link) => (
+            <ShortLinkItem key={link.id} shortLink={link} />
           ))
         ) : (
           <div className="flex flex-col items-center gap-3 pt-4 pb-6 w-full border-t-1 border-t-gray-200">

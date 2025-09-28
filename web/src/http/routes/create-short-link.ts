@@ -5,11 +5,11 @@ import type {
 import { httpClient } from '../http-client'
 
 export async function createShortLink(
-  data: CreateShortLinkParams
+  input: CreateShortLinkParams
 ): Promise<CreateShortLinkResponse> {
   const response = await httpClient.post<CreateShortLinkResponse>(
     '/short-links',
-    data
+    input
   )
   return response.data
 }

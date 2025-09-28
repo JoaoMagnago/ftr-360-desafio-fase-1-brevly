@@ -1,10 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { WarningIcon } from '@phosphor-icons/react'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import z from 'zod'
-import { createShortLink } from '../http/routes/create-short-link'
+import { useCreateShortLink } from '../hooks/create-short-link'
+import type { CreateShortLinkParams } from '../types'
 import { checkShortUrlFormat } from '../utils/string'
 
 const createShortLinkSchema = z.object({
@@ -36,21 +36,18 @@ export function ShortLinkForm() {
   })
 
   const [isSavingLink, setIsSavingLink] = useState(false)
-    
-  const queryClient = useQueryClient();
+  
+  const createShortLinkMutation = useCreateShortLink()
 
-  const mutation = useMutation({
-    mutationFn: createShortLink,
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["short-links"] });
-    },
-  });
+  const handleCreateShortLink = (data: CreateShortLinkParams) => {
+    createShortLinkMutation.mutate(data)
+  }
 
   const onSubmit = async (data: CreateShortLinkFormValues) => {
     setIsSavingLink(true)
 
     try {
-      mutation.mutate(data)
+      handleCreateShortLink(data)
       reset()
     } catch (error) {
       console.error(error)
