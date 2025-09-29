@@ -13,7 +13,7 @@ export const useDeleteShortLink = () => {
   })
 
   if (mutation.isError) {
-    console.log(mutation.error)
+    console.log('[Delete short link request error]: ', mutation.error)
   }
 
   return mutation

@@ -1,6 +1,6 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
-import { getShortLinkById } from '@/app/functions/get-short-link-by-id'
+import { getShortLink } from '@/app/functions/get-short-link'
 import { incrementAccessCount } from '@/app/functions/increment-access-count'
 import { isLeft, isRight, unwrapEither } from '@/infra/shared/either'
 
@@ -13,7 +13,7 @@ export const incrementAccessCountRoute: FastifyPluginAsyncZod =
           summary: 'Increment the access count of a short link',
           tags: ['short-links'],
           querystring: z.object({
-            searchQuery: z.string().optional(),
+            searchQuery: z.string(),
           }),
           response: {
             200: z.object({
@@ -27,13 +27,13 @@ export const incrementAccessCountRoute: FastifyPluginAsyncZod =
       },
       async (request, reply) => {
         const { searchQuery } = request.query
-        const shortLink = await getShortLinkById({ searchQuery })
+        const shortLink = await getShortLink({ searchQuery })
 
         if (isRight(shortLink)) {
           const accessCount = shortLink.right.shortLink.accessCount ?? 0
 
           const updatedAccessCount = await incrementAccessCount({
-            searchQuery: shortLink.right.shortLink.id,
+            searchQuery: shortLink.right.shortLink.shortUrl,
             accessCount,
           })
 

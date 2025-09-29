@@ -2,40 +2,40 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import logoIcon from '../assets/Logo_Icon.svg';
+import { NOT_FOUND_ROUTE } from '../constants/routes';
 import { getShortLinkByShortUrl } from '../http/routes/get-short-link-by-short-url';
+import type { GetShortLinkByShortUrlResponse } from '../types';
+
+const BASE_URL = import.meta.env.VITE_FRONTEND_URL
 
 export const Redirect = () => {
   const { shortUrl } = useParams<{ shortUrl?: string }>()
   const navigate = useNavigate()
 
-  const enabled = typeof shortUrl === 'string' && shortUrl.length > 0
+  const shortUrlExists = typeof shortUrl === 'string' && shortUrl.length > 0
 
-  const { data, isError } = useQuery({
+  const { data, isSuccess } = useQuery<GetShortLinkByShortUrlResponse, Error>({
     queryKey: ['short-link-by-short-url', shortUrl],
     queryFn: () => {
-      if (!shortUrl) {
-        console.log('Error fetching original url')
-        return
-      }
+      if (!shortUrlExists) throw new Error('Short URL not found')
       return getShortLinkByShortUrl({ shortUrl })
     },
-    enabled,
+    enabled: shortUrlExists,
     retry: false,
   })
 
   const originalUrl = useMemo(() => data?.originalUrl, [data])
 
   useEffect(() => {
-    if (isError) {
-      navigate('/404')
-    }
-  }, [isError, navigate])
-
-  useEffect(() => {
-    if(originalUrl) {
+    if (isSuccess && originalUrl) {
       window.location.href = originalUrl
     }
-  }, [originalUrl])
+  }, [isSuccess, originalUrl])
+
+  if (!shortUrlExists) {
+    navigate(NOT_FOUND_ROUTE)
+    return
+  }
 
   return (
     <main className="h-dvh flex items-center justify-center px-3">
@@ -51,7 +51,7 @@ export const Redirect = () => {
           <p className="text-md-semibold text-gray-500 text-center">
             Não foi redirecionado?{' '}
             <a
-              href={`https://${originalUrl}`}
+              href={isSuccess ? originalUrl : BASE_URL}
               className="text-blue-base underline hover:cursor-pointer"
             >
               Clique aqui

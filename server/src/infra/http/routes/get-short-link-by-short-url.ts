@@ -1,6 +1,7 @@
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
 import { getShortLink } from '@/app/functions/get-short-link'
+import { incrementAccessCount } from '@/app/functions/increment-access-count'
 import { isLeft, unwrapEither } from '@/infra/shared/either'
 
 export const getShortLinkByShortUrlRoute: FastifyPluginAsyncZod =
@@ -9,7 +10,7 @@ export const getShortLinkByShortUrlRoute: FastifyPluginAsyncZod =
       '/short-links/:shortUrl',
       {
         schema: {
-          summary: 'Get short link by short url',
+          summary: 'Get short link by short url and increment its access count',
           tags: ['short-links'],
           params: z.object({
             shortUrl: z.string(),
@@ -34,6 +35,13 @@ export const getShortLinkByShortUrlRoute: FastifyPluginAsyncZod =
             .status(404)
             .send({ message: unwrapEither(shortLink).message })
         }
+
+        const accessCount = shortLink.right.shortLink.accessCount ?? 0
+
+        await incrementAccessCount({
+          searchQuery: shortLink.right.shortLink.shortUrl,
+          accessCount,
+        })
 
         const { id, originalUrl } = unwrapEither(shortLink).shortLink
 

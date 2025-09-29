@@ -25,7 +25,7 @@ export async function incrementAccessCount(
     .set({
       accessCount: accessCount + 1,
     })
-    .where(eq(schema.shortLinks.id, searchQuery))
+    .where(eq(schema.shortLinks.shortUrl, searchQuery))
     .returning({
       updatedAccessCount: schema.shortLinks.accessCount,
     })

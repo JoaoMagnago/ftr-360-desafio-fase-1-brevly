@@ -29,6 +29,14 @@ export interface GetShortLinkByShortUrlResponse {
   originalUrl: string
 }
 
+export interface IncrementAccessCountParams {
+  shortLinkId: string
+}
+
+export interface IncrementAccessCountResponse {
+  updatedAccessCount: number
+}
+
 export interface DeleteShortLinkParams {
   shortLinkId: string
 }
