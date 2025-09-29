@@ -40,7 +40,10 @@ export const ShortLinksList = () => {
           type="button"
           size={"sm"}
           color={"primary"}
+          spinnerColor='text-gray-500'
+          className='min-w-25'
           disabled={!shortLinks || shortLinks.length === 0}
+          isLoading={shouldExportToCSV}
           onClick={() => setShouldExportToCSV(true)}
         >
           <DownloadSimpleIcon fontSize={16} />
@@ -51,7 +54,7 @@ export const ShortLinksList = () => {
       </div>
 
       <div className="flex flex-col w-full max-h-[400px] overflow-y-auto">
-        {!!shortLinks && shortLinks.length > 0 || isLoadingShortLinks || isShortLinksError ? (
+        {!!shortLinks && shortLinks.length > 0 && !isLoadingShortLinks && !isShortLinksError ? (
           shortLinks.map((link) => (
             <ShortLinkItem key={link.id} shortLink={link} />
           ))

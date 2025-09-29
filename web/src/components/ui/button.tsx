@@ -1,6 +1,7 @@
 import { Slot } from "@radix-ui/react-slot";
 import type { ComponentProps } from "react";
 import { tv, type VariantProps } from "tailwind-variants";
+import { Spinner } from "./spinner";
 
 const buttonVariants = tv({
   base: ["flex items-center justify-center cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 disabled:border-transparent transition-all duration-100"],
@@ -25,12 +26,25 @@ const buttonVariants = tv({
 type ButtonProps = ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean;
+    isLoading?: boolean
+    spinnerColor?: 'white' | 'text-gray-500' | 'text-gray-600'
   };
 
-export function Button({ size, color, className, asChild, ...props }: ButtonProps) {
+export function Button({ size, color, className, asChild, isLoading = false, spinnerColor = 'white', children, ...props }: ButtonProps) {
   const Component = asChild ? Slot : "button";
 
   return (
-    <Component className={buttonVariants({ size, color, className })} {...props} />
+     <Component
+      disabled={isLoading || props.disabled}
+      className={buttonVariants({ size, color, className })}
+      {...props}
+    >
+      {isLoading ? (
+        <Spinner
+          size={16}
+          className={spinnerColor}
+        />
+      ) : children}
+    </Component>
   );
 }

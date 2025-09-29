@@ -52,15 +52,17 @@ export const ShortLinkItem = ({ shortLink }: { shortLink: ShortLink }) => {
             color="primary"
             onClick={handleCopy}
           >
-            {copied ? <CheckIcon color={'var(--color-success)'} /> : <CopyIcon />}
+            {copied ? <CheckIcon color={'var(--color-success)'} /> : <CopyIcon color='var(--color-gray-600)' />}
           </Button>
           <Button 
             type="button"
             size="sm"
             color="primary"
+            spinnerColor='text-gray-600'
+            isLoading={deleteMutation.isPending}
             onClick={handleDelete}
           >
-            <TrashIcon />
+            <TrashIcon color='var(--color-gray-600)' />
           </Button>
         </div>
       </div>

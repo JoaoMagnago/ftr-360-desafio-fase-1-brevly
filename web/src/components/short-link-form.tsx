@@ -1,6 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { WarningIcon } from '@phosphor-icons/react'
-import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import z from 'zod'
 import { useCreateShortLink } from '../hooks/create-short-link'
@@ -35,8 +34,6 @@ export function ShortLinkForm() {
       shortUrl: '',
     },
   })
-
-  const [isSavingLink, setIsSavingLink] = useState(false)
   
   const createShortLinkMutation = useCreateShortLink()
 
@@ -45,15 +42,11 @@ export function ShortLinkForm() {
   }
 
   const onSubmit = async (data: CreateShortLinkFormValues) => {
-    setIsSavingLink(true)
-
     try {
       handleCreateShortLink(data)
       reset()
     } catch (error) {
       console.error(error)
-    } finally {
-      setIsSavingLink(false)
     }
   }
 
@@ -156,8 +149,9 @@ export function ShortLinkForm() {
         size="md"
         color="secondary"
         disabled={originalUrl.length === 0 || shortUrl.length === 0}
+        isLoading={createShortLinkMutation.isPending}
       >
-        <span className='text-md-semibold text-white'>{isSavingLink ? 'Salvando...' : 'Salvar Link'}</span>
+        <span className='text-md-semibold text-white'>Salvar Link</span>
       </Button>
     </form>
   )
