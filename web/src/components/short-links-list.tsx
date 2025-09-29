@@ -3,44 +3,55 @@ import {
   LinkIcon
 } from '@phosphor-icons/react';
 import { useQuery } from '@tanstack/react-query';
-import { useEffect, useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import { exportShortLinks } from '../http/routes/export-short-links';
 import { getShortLinks } from '../http/routes/get-short-links';
+import { downloadUrl } from '../utils/downloadUrl';
 import { ShortLinkItem } from './short-links-item';
+import { Button } from './ui/button';
 
 export const ShortLinksList = () => {
-  const { data: shortLinksData, error, isError, isLoading } = useQuery({
+  const [shouldExportToCSV, setShouldExportToCSV] = useState(false)
+
+  const { data: shortLinksData, isError: isShortLinksError, isLoading: isLoadingShortLinks } = useQuery({
     queryKey: ["short-links"],
     queryFn: getShortLinks,
   });
 
+  useQuery({
+    queryKey: ["export-short-links"],
+    queryFn: () => {
+      exportShortLinks()
+        .then((response) => downloadUrl(response.reportUrl))
+        .finally(() => setShouldExportToCSV(false))
+    },
+    enabled: shouldExportToCSV,
+    retry: false
+  });
+
   const shortLinks = useMemo(() => shortLinksData?.shortLinks ?? [], [shortLinksData]);
-
-  useEffect(() => {
-    console.log(error)
-  }, [error])
-
-  if(isLoading) return <div>loading...</div>
-  if(isError) return <div>{error.message}</div>
 
   return (
     <div className="flex items-center flex-col gap-5 p-8 rounded-lg bg-gray-100 w-full lg:mt-16">
       <div className="flex justify-between w-full">
         <h2 className="text-lg text-gray-600">Meus links</h2>
 
-        <button
-          type='button'
+        <Button
+          type="button"
+          size={"sm"}
+          color={"primary"}
           disabled={!shortLinks || shortLinks.length === 0}
-          className="flex items-center p-2 rounded-sm cursor-pointer gap-1.5 bg-gray-200 border-1 border-transparent hover:border-blue-base disabled:cursor-not-allowed disabled:opacity-50 disabled:border-transparent transition-all duration-100"
+          onClick={() => setShouldExportToCSV(true)}
         >
           <DownloadSimpleIcon fontSize={16} />
           <span className="text-sm-semibold font-(weight:--font-semibold) text-gray-500">
             Baixar CSV
           </span>
-        </button>
+        </Button>
       </div>
 
       <div className="flex flex-col w-full max-h-[400px] overflow-y-auto">
-        {!!shortLinks && shortLinks.length > 0 ? (
+        {!!shortLinks && shortLinks.length > 0 || isLoadingShortLinks || isShortLinksError ? (
           shortLinks.map((link) => (
             <ShortLinkItem key={link.id} shortLink={link} />
           ))

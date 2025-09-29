@@ -6,6 +6,7 @@ import z from 'zod'
 import { useCreateShortLink } from '../hooks/create-short-link'
 import type { CreateShortLinkParams } from '../types'
 import { checkShortUrlFormat } from '../utils/string'
+import { Button } from './ui/button'
 
 const createShortLinkSchema = z.object({
   originalUrl: z.url({ error: 'Informe uma url válida.' }).min(1).max(2048),
@@ -149,14 +150,15 @@ export function ShortLinkForm() {
         />
       </div>
 
-      <button
+      <Button
         type="submit"
         form="create-short-link-form"
+        size="md"
+        color="secondary"
         disabled={originalUrl.length === 0 || shortUrl.length === 0}
-        className="h-12 text-md-semibold text-white font-(weight:--font-semibold) cursor-pointer bg-blue-base rounded-lg hover:bg-blue-dark disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 ease-in-out"
       >
-        {isSavingLink ? 'Salvando...' : 'Salvar Link'}
-      </button>
+        <span className='text-md-semibold text-white'>{isSavingLink ? 'Salvando...' : 'Salvar Link'}</span>
+      </Button>
     </form>
   )
 }

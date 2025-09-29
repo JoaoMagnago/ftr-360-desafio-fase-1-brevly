@@ -45,3 +45,6 @@ export interface DeleteShortLinkResponse {
   shortLinkId: string
   shortUrl: string
 }
+export interface ExportShortLinksResponse {
+  reportUrl: string
+}

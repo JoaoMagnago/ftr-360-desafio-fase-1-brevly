@@ -8,14 +8,13 @@ import { exportShortLinks } from '@/app/functions/export-short-links'
 import { isRight, unwrapEither } from '@/infra/shared/either'
 
 export const exportShortLinksRoute: FastifyPluginAsyncZod = async server => {
-  server.withTypeProvider<ZodTypeProvider>().post(
+  server.withTypeProvider<ZodTypeProvider>().get(
     '/short-links/exports',
     {
       schema: {
         summary:
           'Generate a CSV file with a report of all created short links, upload to remote storage and get the URL for download',
         tags: ['short-links'],
-        consumes: ['multipart/form-data'],
         response: {
           201: z
             .object({
