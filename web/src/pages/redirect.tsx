@@ -29,8 +29,13 @@ export const Redirect = () => {
   useEffect(() => {
     if (isSuccess && originalUrl) {
       window.location.href = originalUrl
+      return
     }
-  }, [isSuccess, originalUrl])
+
+    if (isSuccess && !data) {
+      navigate(NOT_FOUND_ROUTE)
+    }
+  }, [isSuccess, originalUrl, data])
 
   if (!shortUrlExists) {
     navigate(NOT_FOUND_ROUTE)

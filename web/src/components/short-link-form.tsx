@@ -14,7 +14,7 @@ const createShortLinkSchema = z.object({
     .min(1)
     .max(50)
     .refine((val) => checkShortUrlFormat(val), {
-      message: 'Informe uma url minúscula e sem espaço/caracter especial.',
+      message: 'Informe uma url com palavras separadas por hífen, primeiras letras maiúsculas e sem espaço/caracter especial.',
     }),
 })
 
@@ -88,7 +88,7 @@ export function ShortLinkForm() {
                 onChange={onChange}
               />
               {errors.originalUrl && (
-                <div className="flex items-center gap-2">
+                <div className="grid grid-cols-[auto_1fr] items-center gap-2">
                   <WarningIcon fontSize={12} color="var(--color-danger)" />
                   <span className="text-sm-regular">
                     {errors.originalUrl.message}
@@ -131,7 +131,7 @@ export function ShortLinkForm() {
                 />
               </div>
               {errors.shortUrl && (
-                <div className="flex items-center gap-2">
+                <div className="grid grid-cols-[auto_1fr] items-center gap-2">
                   <WarningIcon fontSize={12} color="var(--color-danger)" />
                   <span className="text-sm-regular">
                     {errors.shortUrl.message}
