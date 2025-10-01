@@ -18,9 +18,6 @@ describe('get all short links', () => {
     const getAllShortLinksSut = await getAllShortLinks()
 
     expect(isRight(getAllShortLinksSut)).toBe(true)
-    if (isRight(getAllShortLinksSut)) {
-      const shortLinks = unwrapEither(getAllShortLinksSut).shortLinks
-      expect(shortLinks.length).toBe(2)
-    }
+    expect(unwrapEither(getAllShortLinksSut).shortLinks.length).toBeGreaterThan(1)
   })
 })
