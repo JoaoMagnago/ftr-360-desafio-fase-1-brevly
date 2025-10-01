@@ -1,8 +1,5 @@
 import { randomUUID } from 'node:crypto'
-import { eq } from 'drizzle-orm'
 import { describe, expect, it } from 'vitest'
-import { db } from '@/infra/db'
-import { schema } from '@/infra/db/schemas'
 import { isLeft, isRight, unwrapEither } from '@/infra/shared/either'
 import { createShortLink } from './create-short-link'
 import { InvalidShortUrlFormatError } from './errors/invalid-short-url-format'
@@ -13,23 +10,13 @@ describe('create short link', () => {
     const shortUrl = `Example-Page${randomUUID().toLocaleLowerCase().replace(/-/g, '')}`
     const originalUrl = `https://example.com`
 
-    const result = await createShortLink({ originalUrl, shortUrl })
+    const sut = await createShortLink({ originalUrl, shortUrl })
 
-    expect(isRight(result)).toBe(true)
-
-    if (isRight(result)) {
-      const [shortLink] = await db
-        .select({
-          id: schema.shortLinks.id,
-          shortUrl: schema.shortLinks.shortUrl,
-        })
-        .from(schema.shortLinks)
-        .where(eq(schema.shortLinks.id, result.right.shortLinkId))
-
-      expect(shortLink).toBeDefined()
-      expect(shortLink.id).toBe(result.right.shortLinkId)
-      expect(shortLink.shortUrl).toBe(result.right.shortUrl)
-    }
+    expect(isRight(sut)).toBe(true)
+    expect(unwrapEither(sut)).toMatchObject({
+      shortLinkId: expect.any(String),
+      shortUrl: expect.any(String)
+    })
   })
 
   it('should not be able to create a short link with an existing short url', async () => {

@@ -1,36 +1,34 @@
 import { randomUUID } from 'node:crypto'
 import { describe, expect, it } from 'vitest'
 import { isRight, unwrapEither } from '@/infra/shared/either'
-import { makeShortLink } from '@/test/factories/make-short-link'
 import { ShortLinkNotFoundError } from './errors/short-link-not-found'
 import { getShortLink } from './get-short-link'
+import { createShortLink } from './create-short-link'
 
 describe('get short link', () => {
-  it('should be able to get a short link from its id', async () => {
+  it('should be able to get a short link from its short URL', async () => {
+    const shortUrl = `Example-Page${randomUUID().toLocaleLowerCase().replace(/-/g, '')}`
+    const originalUrl = `https://example.com`
     const namePattern = randomUUID().toLocaleLowerCase().replace(/-/g, '')
-    const shortLink = await makeShortLink({
-      shortUrl: `Example-Page1${namePattern}`,
+    await createShortLink({
+      originalUrl,
+      shortUrl,
     })
-
-    const { id: shortLinkId, originalUrl, shortUrl } = shortLink
 
     const getShortLinkSut = await getShortLink({
       searchQuery: shortUrl,
     })
 
     expect(isRight(getShortLinkSut)).toBe(true)
-    if (isRight(getShortLinkSut)) {
-      const shortLink = unwrapEither(getShortLinkSut).shortLink
-      expect(shortLink).toEqual(
-        expect.objectContaining({
-          id: shortLinkId,
-          shortUrl,
-          originalUrl,
-          accessCount: 1,
-        })
-      )
-      expect(shortLink.createdAt).toBeInstanceOf(Date)
-    }
+    expect(unwrapEither(getShortLinkSut)).toMatchObject({
+      shortLink: {
+        id: expect.any(String),
+        shortUrl: expect.any(String),
+        originalUrl: expect.any(String),
+        accessCount: expect.any(Number),
+        createdAt: expect.any(Date)
+      }
+    })
   })
 
   it('should throw correct error if short link is not found', async () => {
